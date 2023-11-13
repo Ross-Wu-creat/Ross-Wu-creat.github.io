@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hanyi Wu lab hello world</title>
+  <title>Hanyi Wu lab</title>
   
   
   <link href="https://ross-wu-creat.github.io/atom.xml" rel="self"/>
   
   <link href="https://ross-wu-creat.github.io/"/>
-  <updated>2023-11-13T06:24:15.393Z</updated>
+  <updated>2023-11-13T07:58:33.875Z</updated>
   <id>https://ross-wu-creat.github.io/</id>
   
   <author>
@@ -21,8 +21,19 @@
     <link href="https://ross-wu-creat.github.io/2023/11/13/any-title/"/>
     <id>https://ross-wu-creat.github.io/2023/11/13/any-title/</id>
     <published>2023-11-13T06:23:01.000Z</published>
-    <updated>2023-11-13T06:24:15.393Z</updated>
+    <updated>2023-11-13T07:58:33.875Z</updated>
     
+    <content type="html"><![CDATA[<font face="Times New Roman"><font size=4><h1 id="About-me"><a href="#About-me" class="headerlink" title="About me"></a>About me</h1></font><font size=4><p>This is a simple page for my academic website. Thank you for your subscribing !<br><strong>This is the personal info index homepage~</strong></p></font><h1 id="Education"><a href="#Education" class="headerlink" title="Education"></a>Education</h1><h1 id="Award-and-honors"><a href="#Award-and-honors" class="headerlink" title="Award and honors"></a>Award and honors</h1><h1 id="Research-interests"><a href="#Research-interests" class="headerlink" title="Research interests"></a>Research interests</h1><h1 id="Recent-update"><a href="#Recent-update" class="headerlink" title="Recent update"></a>Recent update</h1><h1 id="Publications"><a href="#Publications" class="headerlink" title="Publications"></a>Publications</h1></font>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;font face=&quot;Times New Roman&quot;&gt;
+
+&lt;font size=4&gt;
+
+&lt;h1 id=&quot;About-me&quot;&gt;&lt;a href=&quot;#About-me&quot; class=&quot;headerlink&quot; title=&quot;About me&quot;&gt;&lt;/a&gt;About me&lt;/h1&gt;&lt;/f</summary>
+      
     
     
     
