@@ -549,7 +549,7 @@ blockquote p {
   font-size: 1.8rem;
 }
 .author-discrip .author-bio {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin: 0.3rem 0;
 }
 .author-discrip h4 {
@@ -557,7 +557,7 @@ blockquote p {
   font-size: 1.8rem;
 }
 .author-discrip .author-addr {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin: 0.3rem 0;
 }
 .author-discrip h5 {
@@ -565,7 +565,7 @@ blockquote p {
   font-size: 1.8rem;
 }
 .author-discrip .author-tel {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin: 0.3rem 0;
 }
 .author-discrip h6 {
@@ -573,7 +573,7 @@ blockquote p {
   font-size: 1.8rem;
 }
 .author-discrip .author-eml {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin: 0.3rem 0;
 }
 .author-links {
@@ -708,26 +708,11 @@ blockquote p {
 .social-links .e-social-link:hover span {
   text-decoration: underline;
 }
-.author-discrip {
-  display: table-cell;
-  vertical-align: top;
-  padding-left: 15px;
-  padding-right: 15px;
-  line-height: 1;
-}
-.author-discrip h3 {
-  margin: 0px;
-  font-size: 1.8rem;
-}
-.author-discrip .author-bio {
-  font-size: 1.2rem;
-  margin: 0.3rem 0;
-}
 .cv-links {
   color: #096494 !important;
   display: inline-block;
   position: relative;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-left: 5.5rem;
 }
 .cv-links i {
@@ -781,7 +766,7 @@ blockquote p {
     color: #000;
   }
   .author-discrip .author-bio {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin-top: 8px;
     margin-bottom: 10px;
   }
