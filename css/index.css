@@ -535,7 +535,7 @@ blockquote p {
 .author-avatar img {
   width: 100%;
   max-width: 110px;
-  border-radius: 50%;
+  border-radius: 0%;
 }
 .author-discrip {
   display: table-cell;
@@ -549,6 +549,30 @@ blockquote p {
   font-size: 1.8rem;
 }
 .author-discrip .author-bio {
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
+}
+.author-discrip h4 {
+  margin: 0px;
+  font-size: 1.8rem;
+}
+.author-discrip .author-addr {
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
+}
+.author-discrip h5 {
+  margin: 0px;
+  font-size: 1.8rem;
+}
+.author-discrip .author-tel {
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
+}
+.author-discrip h6 {
+  margin: 0px;
+  font-size: 1.8rem;
+}
+.author-discrip .author-eml {
   font-size: 1.2rem;
   margin: 0.3rem 0;
 }
@@ -683,6 +707,21 @@ blockquote p {
 }
 .social-links .e-social-link:hover span {
   text-decoration: underline;
+}
+.author-discrip {
+  display: table-cell;
+  vertical-align: top;
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height: 1;
+}
+.author-discrip h3 {
+  margin: 0px;
+  font-size: 1.8rem;
+}
+.author-discrip .author-bio {
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
 }
 .cv-links {
   color: #096494 !important;
