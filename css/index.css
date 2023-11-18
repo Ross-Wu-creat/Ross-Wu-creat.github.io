@@ -332,7 +332,7 @@ blockquote p {
     z-index: 0;
     border-style: solid;
     border-width: 0px 10px 10px;
-    border-color: #fff transparent;
+    border-color: #000;
   }
   .menus_items li {
     display: block;
@@ -529,8 +529,8 @@ blockquote p {
 .author-avatar {
   display: table-cell;
   vertical-align: top;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 70px;
 }
 .author-avatar img {
   width: 100%;
@@ -806,8 +806,8 @@ blockquote p {
   height: 100px;
   width: 100%;
   float: left;
-  margin-left: 0;
-  margin-right: 0;
+  margin-left: 100;
+  margin-right: 100;
   color: #9ba1a6;
   -webkit-animation: intro 0.3s both;
   animation: intro 0.3s both;
