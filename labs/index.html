@@ -74,42 +74,4 @@ var themeConfig = {
         app_key: 'zztGhx5780uMfTPLArDM0O5r',
         server_url: 'https://ross-wu-creat.github.io/'
     }
-};</script><script src="/js/lc_counter.js"></script><!--<script type="text/javascript" id="mmvst_globe" src="//mapmyvisitors.com/globe.js?d=rwteNo0uVeJ9PaUCJbuXcfMXf6UfVb4tQ5TK4crJrjE"></script>--></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery-pjax@latest/jquery.pjax.min.js"></script><script src="/js/main.js"></script><script src="/%3Cscript%20async%20src=%22/js/grayscale.js%22%3E%3C/script%3E"></script><script>document.addEventListener('DOMContentLoaded', function() {
-    // 初始化LeanCloud
-    var appId = '63JwtA62Fre1XvFM04RllTqI-MdYXbMMI';
-    var appKey = 'zztGhx5780uMfTPLArDM0O5r';
-    AV.init({ appId: appId, appKey: appKey });
-
-    // 获取当前文章的唯一标识，这里用文章的URL路径
-    var counterId = '/labs/index.html'; // 对于Hexo，page.path通常可以唯一标识一篇文章
-    var counterTitle = '';
-
-    // 检查是否需要计数（例如，在文章页面才计数）
-    if (counterId && $('#post-views').length) {
-        var Counter = AV.Object.extend('Counter');
-        var query = new AV.Query(Counter);
-        query.equalTo('post_id', counterId); // 假设以post_id作为文章唯一标识
-
-        query.find().then(function (results) {
-            if (results.length > 0) {
-                // 如果已有记录，则增加计数
-                var counter = results[0];
-                counter.increment('views', 1);
-                return counter.save();
-            } else {
-                // 如果没有记录，创建新记录
-                var newCounter = new Counter();
-                newCounter.set('post_id', counterId);
-                newCounter.set('title', counterTitle);
-                newCounter.set('views', 1);
-                return newCounter.save();
-            }
-        }).then(function (counter) {
-            // 成功更新计数后，显示最新的浏览量
-            var views = counter.get('views');
-            $('#post-views').text(views);
-        }).catch(function (error) {
-            console.error('Error updating view count: ', error);
-        });
-    }
-});</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":200},"mobile":{"show":true},"react":{"opacity":0.9},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
+};</script><script src="/../../source/js/lc_counter.js"></script><!--<script type="text/javascript" id="mmvst_globe" src="//mapmyvisitors.com/globe.js?d=rwteNo0uVeJ9PaUCJbuXcfMXf6UfVb4tQ5TK4crJrjE"></script>--></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery-pjax@latest/jquery.pjax.min.js"></script><script src="/js/main.js"></script><script src="/%3Cscript%20async%20src=%22/js/grayscale.js%22%3E%3C/script%3E"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":200},"mobile":{"show":true},"react":{"opacity":0.9},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
