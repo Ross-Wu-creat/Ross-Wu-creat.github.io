@@ -431,8 +431,8 @@ blockquote p {
   clear: both;
   margin-top: 3.2rem;
   margin-bottom: 6.4rem;
-  padding-left: 1.6rem;
-  padding-right: 1.6rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   animation: intro 0.3s both;
   animation-delay: 0.35s;
 }
@@ -493,7 +493,7 @@ blockquote p {
 }
 @media screen and (min-width: 66.67em) {
   #page_main {
-    max-width: 1200px;
+    max-width: 1400px;
   }
 }
 @media (min-width: 34em) {
@@ -529,8 +529,8 @@ blockquote p {
 .author-avatar {
   display: table-cell;
   vertical-align: top;
-  width: 80px;
-  height: 90px;
+  width: 90px;
+  height: 110px;
 }
 .author-avatar img {
   width: 110%;
