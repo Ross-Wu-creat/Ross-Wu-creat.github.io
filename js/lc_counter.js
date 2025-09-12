@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 1. 创建一条记录标记这个访客已经访问过
                 var newVisitorRecord = new Counter();
                 newVisitorRecord.set('key', uvKey);
-                newVisitorRecord.set('value', 1); // 值意义不大，主要存在即可
+                // newVisitorRecord.set('value', 1); // 值意义不大，主要存在即可
                 await newVisitorRecord.save();
 
                 // 2. 更新站点总UV计数器
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         var newSiteUvCounter = new Counter();
                         newSiteUvCounter.set('key', 'site_uv');
-                        newSiteUvCounter.set('value', 1);
+                        // newSiteUvCounter.set('value', 1);
                         return newSiteUvCounter.save();
                     }
                 }).then(function(updatedSiteUvCounter) {
