@@ -37,21 +37,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 更新站点总UV (基于IP，简单实现)
         // 更严谨的UV需借助LeanCloud的云引擎或前端生成UUID存LocalStorage
-        var uvKey = 'site_uv_' + getVisitorId(); // 假设一个获取访客标识的函数
-        new AV.Query(Counter).equalTo('key', uvKey).first().then(function(uvCounter) {
-            if (!uvCounter) { // 新访客
-                var newSiteUvCounter = new Counter();
-                newSiteUvCounter.set('key', 'site_uv');
-                newSiteUvCounter.set('value', 1);
-                return newSiteUvCounter.save().then(function() {
-                    new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
-                        if (siteUvCounter) {
-                            document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
-                        }
-                    });
+        // 更新站点总UV - 改进后
+        function getVisitorId() {
+            var visitorId = localStorage.getItem('leancloud_visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substr(2, 9) + '_' + new Date().getTime();
+                localStorage.setItem('leancloud_visitor_id', visitorId);
+            }
+            return visitorId;
+        }
+
+
+        var visitorId = getVisitorId(); // 获取当前访客标识
+        var uvKey = 'site_uv_visitor_' + visitorId; // 为每个访客创建一个唯一的记录键
+
+        new AV.Query(Counter).equalTo('key', uvKey).first().then(function(visitorRecord) {
+            if (!visitorRecord) {
+                // 如果找不到该访客的记录，说明是新访客
+                // 1. 创建一条记录标记这个访客已经访问过
+                var newVisitorRecord = new Counter();
+                newVisitorRecord.set('key', uvKey);
+                newVisitorRecord.set('value', 1); // 值意义不大，主要存在即可
+                await newVisitorRecord.save();
+
+                // 2. 更新站点总UV计数器
+                return new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
+                    if (siteUvCounter) {
+                        siteUvCounter.increment('value', 1);
+                        return siteUvCounter.save();
+                    } else {
+                        var newSiteUvCounter = new Counter();
+                        newSiteUvCounter.set('key', 'site_uv');
+                        newSiteUvCounter.set('value', 1);
+                        return newSiteUvCounter.save();
+                    }
+                }).then(function(updatedSiteUvCounter) {
+                    // 更新页面上的UV显示
+                    document.getElementById('leancloud-site-uv').innerText = updatedSiteUvCounter.get('value');
+                });
+            } else {
+                // 老访客，UV不需要更新，但可能需要更新最后访问时间等，这里省略
+                // 可以查询并显示当前的站点总UV
+                return new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
+                    if (siteUvCounter) {
+                        document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
+                    }
                 });
             }
         }).catch(console.error);
+
+
+
     }
 
     // 2. 更新并显示文章阅读数 (PV)
