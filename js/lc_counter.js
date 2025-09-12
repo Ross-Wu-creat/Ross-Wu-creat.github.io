@@ -21,22 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. 更新并显示站点 PV 和 UV (通常在首页或全局需要)
     function updateSiteStats() {
         // 更新站点总PV
-        new AV.Query(Counter).equalTo('key', 'site_pv').first().then(function(sitePvCounter) {
-            if (sitePvCounter) {
-                sitePvCounter.increment('value', 1);
-                return sitePvCounter.save();
-            } else {
-                var newSitePvCounter = new Counter();
-                newSitePvCounter.set('key', 'site_pv');
-                newSitePvCounter.set('value', 1);
-                return newSitePvCounter.save();
-            }
-        }).then(function(sitePvCounter) {
-            document.getElementById('leancloud-site-pv').innerText = sitePvCounter.get('value');
-        }).catch(console.error);
-
-        // 更新站点总UV (基于IP，简单实现)
-        // 更严谨的UV需借助LeanCloud的云引擎或前端生成UUID存LocalStorage
         // 更新站点总UV - 改进后
         function getVisitorId() {
             var visitorId = localStorage.getItem('leancloud_visitor_id');
@@ -47,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return visitorId;
         }
 
-
         var visitorId = getVisitorId(); // 获取当前访客标识
         var uvKey = 'site_uv_visitor_' + visitorId; // 为每个访客创建一个唯一的记录键
 
@@ -57,20 +40,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 1. 创建一条记录标记这个访客已经访问过
                 var newVisitorRecord = new Counter();
                 newVisitorRecord.set('key', uvKey);
-                // newVisitorRecord.set('value', 1); // 值意义不大，主要存在即可
-                await newVisitorRecord.save();
-
-                // 2. 更新站点总UV计数器
-                return new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
-                    if (siteUvCounter) {
-                        siteUvCounter.increment('value', 1);
-                        return siteUvCounter.save();
-                    } else {
-                        var newSiteUvCounter = new Counter();
-                        newSiteUvCounter.set('key', 'site_uv');
-                        // newSiteUvCounter.set('value', 1);
-                        return newSiteUvCounter.save();
-                    }
+                newVisitorRecord.set('value', 1); // 值意义不大，主要存在即可
+                return newVisitorRecord.save().then(function() {
+                    // 2. 更新站点总UV计数器
+                    return new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
+                        if (siteUvCounter) {
+                            siteUvCounter.increment('value', 1);
+                            return siteUvCounter.save();
+                        } else {
+                            var newSiteUvCounter = new Counter();
+                            newSiteUvCounter.set('key', 'site_uv');
+                            newSiteUvCounter.set('value', 1); // 这里取消注释，设置初始值1
+                            return newSiteUvCounter.save();
+                        }
+                    });
                 }).then(function(updatedSiteUvCounter) {
                     // 更新页面上的UV显示
                     document.getElementById('leancloud-site-uv').innerText = updatedSiteUvCounter.get('value');
@@ -85,8 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         }).catch(console.error);
-
-
 
     }
 
