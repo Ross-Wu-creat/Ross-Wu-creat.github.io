@@ -1,0 +1,16 @@
+.stats-container {
+  line-height: 0.5; /* 设置行高 */
+  font-family: Time New Roman; /* 设置字体 */
+  font-size: 1.5rem;
+}
+.stats-container .stat-item {
+  margin-bottom: 0.2em; /* 设置段落间距 */
+  font-family: Time New Roman;
+}
+.stats-container .count-number {
+  margin: 0 5px;
+  font-weight: bold;
+  color: #ff6d6d;
+  font-size: 1.8rem;
+/* 你也可以为数字部分单独设置字体或大小 */
+}
