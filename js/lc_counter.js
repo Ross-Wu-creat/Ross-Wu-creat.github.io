@@ -52,12 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 var newSiteUvCounter = new Counter();
                 newSiteUvCounter.set('key', 'site_uv');
                 newSiteUvCounter.set('value', 1);
-                return newSiteUvCounter.save().then(function() {
-                    new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
-                        if (siteUvCounter) {
-                            document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
-                        }
-                    });
+                newSiteUvCounter.save()
+
+                new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
+                    if (siteUvCounter) {
+                        siteUvCounter.increment('value', 1);
+                        return siteUvCounter.save();
+                    } else {
+                        var newSiteUvCounter = new Counter();
+                        newSiteUvCounter.set('key', 'site_uv');
+                        newSiteUvCounter.set('value', 1);
+                        return newSiteUvCounter.save();
+                    }
+                }).then(function(siteUvCounter) {
+                    document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
                 });
             }
         }).catch(console.error);
