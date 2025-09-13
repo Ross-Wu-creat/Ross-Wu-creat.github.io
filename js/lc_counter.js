@@ -37,21 +37,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 更新站点总UV (基于IP，简单实现)
         // 更严谨的UV需借助LeanCloud的云引擎或前端生成UUID存LocalStorage
-        var uvKey = 'site_uv_' + getVisitorId(); // 假设一个获取访客标识的函数
-        new AV.Query(Counter).equalTo('key', uvKey).first().then(function(uvCounter) {
-            if (!uvCounter) { // 新访客
-                var newSiteUvCounter = new Counter();
-                newSiteUvCounter.set('key', 'site_uv');
-                newSiteUvCounter.set('value', 1);
-                return newSiteUvCounter.save().then(function() {
+        function getVisitorId() {
+            let vid = localStorage.getItem('visitor_id');
+            if (!vid) {
+                vid = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('visitor_id', vid);
+            }
+            return vid;
+        }
+
+        function updateUV() {
+            var uvKey = 'site_uv_' + getVisitorId();
+
+            // 检查是否已经记录过这个访客
+            new AV.Query(Counter).equalTo('key', uvKey).first().then(function(uvCounter) {
+                if (!uvCounter) {
+                    // 记录访客标识
+                    var newUvKeyCounter = new Counter();
+                    newUvKeyCounter.set('key', uvKey);
+                    newUvKeyCounter.set('value', 1);
+                    newUvKeyCounter.save();
+
+                    // 更新总 UV
                     new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
                         if (siteUvCounter) {
-                            document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
+                            siteUvCounter.increment('value', 1);
+                            return siteUvCounter.save();
+                        } else {
+                            var newSiteUvCounter = new Counter();
+                            newSiteUvCounter.set('key', 'site_uv');
+                            newSiteUvCounter.set('value', 1);
+                            return newSiteUvCounter.save();
                         }
+                    }).then(function(siteUvCounter) {
+                        document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
                     });
-                });
-            }
-        }).catch(console.error);
+                }
+            }).catch(console.error);
+        }
+
     }
 
     // 2. 更新并显示文章阅读数 (PV)
