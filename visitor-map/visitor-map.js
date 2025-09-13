@@ -53,7 +53,9 @@ function drawMap(mapName, mapJson, data) {
   chart.setOption({
     tooltip: {
       trigger: 'item',
-      formatter: '{b}: {c}' // b = 国家名，c = 访问量
+      formatter: function(params) {
+        return params.name + ': ' + (params.value || 0);
+      }
     },
     visualMap: {
       min: 0,
@@ -71,12 +73,13 @@ function drawMap(mapName, mapJson, data) {
       map: mapName,
       roam: true,
       label: {
-        show: false // 关闭默认标签
+        show: false
       },
       data: data
     }]
   });
 }
+
 
 
 function loadMap(level, name) {
@@ -117,13 +120,18 @@ chart.on('click', params => {
 
 backBtn.addEventListener('click', () => {
   historyStack.pop();
-  if (currentLevel === 'china') {
+  const previous = historyStack[historyStack.length - 1];
+
+  if (!previous || previous === 'world') {
     loadMap('world');
     backBtn.style.display = 'none';
-  } else if (currentLevel === 'province') {
+  } else if (previous === 'China') {
     loadMap('china');
+  } else {
+    loadMap('province', previous);
   }
 });
+
 
 saveVisitorLocation();
 loadMap('world');
