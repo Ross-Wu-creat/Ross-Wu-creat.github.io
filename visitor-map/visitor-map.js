@@ -43,95 +43,105 @@ function loadStats(field, filterValue) {
   });
 }
 
-const chart = echarts.init(document.getElementById('visitor-map'));
-const backBtn = document.getElementById('back-to-prev');
-let currentLevel = 'world';
-let historyStack = [];
-
-function drawMap(mapName, mapJson, data) {
-  echarts.registerMap(mapName, mapJson);
-  chart.setOption({
-    tooltip: {
-      trigger: 'item',
-      formatter: function(params) {
-        return params.name + ': ' + (params.value || 0);
-      }
-    },
-    visualMap: {
-      min: 0,
-      max: Math.max(...data.map(d => d.value)),
-      text: ['高', '低'],
-      realtime: false,
-      calculable: true,
-      inRange: {
-        color: ['#e0ffff', '#006edd']
-      }
-    },
-    series: [{
-      name: '访客数',
-      type: 'map',
-      map: mapName,
-      roam: true,
-      label: {
-        show: false
-      },
-      data: data
-    }]
-  });
-}
-
-
-
-function loadMap(level, name) {
-  let path, field, filter;
-  if (level === 'world') {
-    path = '/visitor-map/maps/world.json';
-    field = 'country';
-  } else if (level === 'china') {
-    path = '/visitor-map/maps/china.json';
-    field = 'region';
-    filter = 'China';
-  } else if (level === 'province') {
-    path = `/visitor-map/maps/provinces/${name}.json`;
-    field = 'city';
-    filter = name;
+class MapNavigator {
+  constructor(chart, backBtn) {
+    this.chart = chart;
+    this.backBtn = backBtn;
+    this.history = ['world'];
+    this.levels = {
+      world: { path: '/visitor-map/maps/world.json', field: 'country' },
+      china: { path: '/visitor-map/maps/china.json', field: 'region', filter: 'China' },
+      province: name => ({
+        path: `/visitor-map/maps/provinces/${name}.json`,
+        field: 'city',
+        filter: name
+      })
+    };
+    this.initEvents();
   }
 
-  fetch(path)
-    .then(res => res.json())
-    .then(json => {
-      loadStats(field, filter).then(data => {
-        drawMap(name || level, json, data);
-        currentLevel = level;
+  initEvents() {
+    this.chart.on('click', params => this.handleClick(params.name));
+    this.backBtn.addEventListener('click', () => this.goBack());
+  }
+
+  handleClick(name) {
+    const current = this.getCurrentLevel();
+
+    if (current === 'world' && name === 'China') {
+      this.history.push('china');
+      this.loadMap('china');
+      this.backBtn.style.display = 'block';
+    } else if (current === 'china') {
+      this.history.push(name);
+      this.loadMap('province', name);
+    }
+  }
+
+  goBack() {
+    this.history.pop();
+    const previous = this.getCurrentLevel();
+
+    if (previous === 'world') {
+      this.loadMap('world');
+      this.backBtn.style.display = 'none';
+    } else if (previous === 'china') {
+      this.loadMap('china');
+    } else {
+      this.loadMap('province', previous);
+    }
+  }
+
+  getCurrentLevel() {
+    return this.history[this.history.length - 1];
+  }
+
+  loadMap(level, name) {
+    const config = typeof this.levels[level] === 'function'
+      ? this.levels[level](name)
+      : this.levels[level];
+
+    fetch(config.path)
+      .then(res => res.json())
+      .then(json => {
+        loadStats(config.field, config.filter).then(data => {
+          this.drawMap(name || level, json, data);
+        });
       });
+  }
+
+  drawMap(mapName, mapJson, data) {
+    echarts.registerMap(mapName, mapJson);
+    this.chart.setOption({
+      tooltip: {
+        trigger: 'item',
+        formatter: params => `${params.name}: ${params.value || 0}`
+      },
+      visualMap: {
+        min: 0,
+        max: Math.max(...data.map(d => d.value)),
+        text: ['高', '低'],
+        realtime: false,
+        calculable: true,
+        inRange: { color: ['#e0ffff', '#006edd'] }
+      },
+      series: [{
+        name: '访客数',
+        type: 'map',
+        map: mapName,
+        roam: true,
+        label: { show: false },
+        data: data
+      }]
     });
+  }
 }
-
-chart.on('click', params => {
-  if (currentLevel === 'world' && params.name === 'China') {
-    historyStack.push('China');
-    loadMap('china');
-    backBtn.style.display = 'block';
-  } else if (currentLevel === 'china') {
-    historyStack.push(params.name);
-    loadMap('province', params.name);
-  }
-});
-
-backBtn.addEventListener('click', () => {
-  historyStack.pop();
-  const previous = historyStack[historyStack.length - 1];
-
-  if (!previous || previous === 'world') {
-    loadMap('world');
-    backBtn.style.display = 'none';
-  } else if (previous === 'China') {
-    loadMap('china');
-  } else {
-    loadMap('province', previous);
-  }
-});
 
 
 saveVisitorLocation();
-loadMap('world');
+
+const chart = echarts.init(document.getElementById('visitor-map'));
+const backBtn = document.getElementById('back-to-prev');
+const navigator = new MapNavigator(chart, backBtn);
+
+navigator.loadMap('world');
