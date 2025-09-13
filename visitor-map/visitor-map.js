@@ -51,25 +51,33 @@ let historyStack = [];
 function drawMap(mapName, mapJson, data) {
   echarts.registerMap(mapName, mapJson);
   chart.setOption({
-    tooltip: { trigger: 'item' },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}: {c}' // b = 国家名，c = 访问量
+    },
     visualMap: {
       min: 0,
       max: Math.max(...data.map(d => d.value)),
       text: ['高', '低'],
       realtime: false,
       calculable: true,
-      inRange: { color: ['#e0ffff', '#006edd'] }
+      inRange: {
+        color: ['#e0ffff', '#006edd']
+      }
     },
     series: [{
       name: '访客数',
       type: 'map',
       map: mapName,
       roam: true,
-      label: { show: true },
+      label: {
+        show: false // 关闭默认标签
+      },
       data: data
     }]
   });
 }
+
 
 function loadMap(level, name) {
   let path, field, filter;
