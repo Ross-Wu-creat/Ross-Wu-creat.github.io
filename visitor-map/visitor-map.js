@@ -50,12 +50,6 @@ class MapNavigator {
     this.history = ['world'];
     this.levels = {
       world: { path: '/visitor-map/maps/world.json', field: 'country' },
-      china: { path: '/visitor-map/maps/china.json', field: 'region', filter: 'China' },
-      province: name => ({
-        path: `/visitor-map/maps/provinces/${name}.json`,
-        field: 'city',
-        filter: name
-      })
     };
     this.initEvents();
   }
@@ -63,33 +57,6 @@ class MapNavigator {
   initEvents() {
     this.chart.on('click', params => this.handleClick(params.name));
     this.backBtn.addEventListener('click', () => this.goBack());
-  }
-
-  handleClick(name) {
-    const current = this.getCurrentLevel();
-
-    if (current === 'world' && name === 'China') {
-      this.history.push('china');
-      this.loadMap('china');
-      this.backBtn.style.display = 'block';
-    } else if (current === 'china') {
-      this.history.push(name);
-      this.loadMap('province', name);
-    }
-  }
-
-  goBack() {
-    this.history.pop();
-    const previous = this.getCurrentLevel();
-
-    if (previous === 'world') {
-      this.loadMap('world');
-      this.backBtn.style.display = 'none';
-    } else if (previous === 'china') {
-      this.loadMap('china');
-    } else {
-      this.loadMap('province', previous);
-    }
   }
 
   getCurrentLevel() {
