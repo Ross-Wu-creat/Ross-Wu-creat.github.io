@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 更新站点总UV (基于IP，简单实现)
         // 更严谨的UV需借助LeanCloud的云引擎或前端生成UUID存LocalStorage
+        // 获取访客 ID
         function getVisitorId() {
             let vid = localStorage.getItem('visitor_id');
             if (!vid) {
@@ -46,14 +47,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return vid;
         }
 
-        var uvKey = 'site_uv_' + getVisitorId(); // 假设一个获取访客标识的函数
-        new AV.Query(Counter).equalTo('key', uvKey).first().then(function(uvCounter) {
-            if (!uvCounter) { // 新访客
-                var newSiteUvCounter = new Counter();
-                newSiteUvCounter.set('key', 'site_uv');
-                newSiteUvCounter.set('value', 1);
-                newSiteUvCounter.save()
+        var uvKey = 'site_uv_' + getVisitorId();
 
+        // 检查是否已有该访客记录
+        new AV.Query(Counter).equalTo('key', uvKey).first().then(function(uvCounter) {
+            if (!uvCounter) {
+                // 1. 保存访客标识
+                var visitorRecord = new Counter();
+                visitorRecord.set('key', uvKey);
+                visitorRecord.set('value', 1);
+                visitorRecord.save();
+
+                // 2. 更新总 UV
                 new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
                     if (siteUvCounter) {
                         siteUvCounter.increment('value', 1);
@@ -66,9 +71,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }).then(function(siteUvCounter) {
                     document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
+                }).catch(console.error);
+            } else {
+                // 老访客，直接显示 UV
+                new AV.Query(Counter).equalTo('key', 'site_uv').first().then(function(siteUvCounter) {
+                    if (siteUvCounter) {
+                        document.getElementById('leancloud-site-uv').innerText = siteUvCounter.get('value');
+                    }
                 });
             }
         }).catch(console.error);
+        
     }
 
     // 2. 更新并显示文章阅读数 (PV)
