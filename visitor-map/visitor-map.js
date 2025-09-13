@@ -14,10 +14,9 @@ function getVisitorId() {
   return vid;
 }
 
-// 保存访客位置
 function saveVisitorLocation() {
   const vid = getVisitorId();
-  fetch('https://ipapi.co/json/') // 可换成国内 API
+  fetch('https://ipapi.co/json/')
     .then(res => res.json())
     .then(data => {
       const Visitor = AV.Object.extend('Visitor');
@@ -30,24 +29,28 @@ function saveVisitorLocation() {
     });
 }
 
-// 获取统计数据
-function loadVisitorStats() {
+function loadStats(field, filterValue) {
   const query = new AV.Query('Visitor');
+  if (filterValue) query.equalTo(field, filterValue);
   query.limit(1000);
   return query.find().then(results => {
     const stats = {};
     results.forEach(v => {
-      const country = v.get('country') || 'Unknown';
-      stats[country] = (stats[country] || 0) + 1;
+      const key = v.get(field) || '未知';
+      stats[key] = (stats[key] || 0) + 1;
     });
     return Object.keys(stats).map(name => ({ name, value: stats[name] }));
   });
 }
 
-// 绘制地图
-function drawMap(data) {
-  const chart = echarts.init(document.getElementById('visitor-map'));
-  const option = {
+const chart = echarts.init(document.getElementById('visitor-map'));
+const backBtn = document.getElementById('back-to-prev');
+let currentLevel = 'world';
+let historyStack = [];
+
+function drawMap(mapName, mapJson, data) {
+  echarts.registerMap(mapName, mapJson);
+  chart.setOption({
     tooltip: { trigger: 'item' },
     visualMap: {
       min: 0,
@@ -60,14 +63,59 @@ function drawMap(data) {
     series: [{
       name: '访客数',
       type: 'map',
-      map: 'world',
+      map: mapName,
       roam: true,
+      label: { show: true },
       data: data
     }]
-  };
-  chart.setOption(option);
+  });
 }
 
-// 执行
+function loadMap(level, name) {
+  let path, field, filter;
+  if (level === 'world') {
+    path = '/visitor-map/maps/world.json';
+    field = 'country';
+  } else if (level === 'china') {
+    path = '/visitor-map/maps/china.json';
+    field = 'region';
+    filter = 'China';
+  } else if (level === 'province') {
+    path = `/visitor-map/maps/provinces/${name}.json`;
+    field = 'city';
+    filter = name;
+  }
+
+  fetch(path)
+    .then(res => res.json())
+    .then(json => {
+      loadStats(field, filter).then(data => {
+        drawMap(name || level, json, data);
+        currentLevel = level;
+      });
+    });
+}
+
+chart.on('click', params => {
+  if (currentLevel === 'world' && params.name === 'China') {
+    historyStack.push('China');
+    loadMap('china');
+    backBtn.style.display = 'block';
+  } else if (currentLevel === 'china') {
+    historyStack.push(params.name);
+    loadMap('province', params.name);
+  }
+});
+
+backBtn.addEventListener('click', () => {
+  historyStack.pop();
+  if (currentLevel === 'china') {
+    loadMap('world');
+    backBtn.style.display = 'none';
+  } else if (currentLevel === 'province') {
+    loadMap('china');
+  }
+});
+
 saveVisitorLocation();
-loadVisitorStats().then(drawMap);
+loadMap('world');
