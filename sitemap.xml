@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ross-wu-creat.github.io/publication/index.html</loc>
+    
+    <lastmod>2025-11-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://ross-wu-creat.github.io/2023/11/13/homepage/</loc>
     
     <lastmod>2025-11-18</lastmod>
@@ -14,15 +23,6 @@
     <loc>https://ross-wu-creat.github.io/labs/index.html</loc>
     
     <lastmod>2025-09-23</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://ross-wu-creat.github.io/publication/index.html</loc>
-    
-    <lastmod>2025-09-11</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
